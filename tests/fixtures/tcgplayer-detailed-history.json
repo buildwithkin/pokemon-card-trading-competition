@@ -1,0 +1,83 @@
+{
+  "count": 3,
+  "result": [
+    {
+      "skuId": "8938020",
+      "variant": "Holofoil",
+      "language": "English",
+      "condition": "Near Mint",
+      "averageDailyQuantitySold": "4",
+      "averageDailyTransactionCount": "4",
+      "totalQuantitySold": "425",
+      "totalTransactionCount": "411",
+      "trendingMarketPricePercentages": {},
+      "buckets": [
+        {
+          "marketPrice": "62.83",
+          "quantitySold": "14",
+          "lowSalePrice": "58.1",
+          "lowSalePriceWithShipping": "59.41",
+          "highSalePrice": "68.4",
+          "highSalePriceWithShipping": "88.39",
+          "transactionCount": "14",
+          "bucketStartDate": "2026-04-14"
+        },
+        {
+          "marketPrice": "63.12",
+          "quantitySold": "8",
+          "lowSalePrice": "60",
+          "lowSalePriceWithShipping": "61.38",
+          "highSalePrice": "69.99",
+          "highSalePriceWithShipping": "69.99",
+          "transactionCount": "8",
+          "bucketStartDate": "2026-04-11"
+        },
+        {
+          "marketPrice": "66.63",
+          "quantitySold": "0",
+          "lowSalePrice": "0",
+          "lowSalePriceWithShipping": "0",
+          "highSalePrice": "0",
+          "highSalePriceWithShipping": "0",
+          "transactionCount": "0",
+          "bucketStartDate": "2026-01-25"
+        }
+      ]
+    },
+    {
+      "skuId": "8938021",
+      "variant": "Holofoil",
+      "language": "English",
+      "condition": "Lightly Played",
+      "averageDailyQuantitySold": "1",
+      "averageDailyTransactionCount": "1",
+      "totalQuantitySold": "12",
+      "totalTransactionCount": "12",
+      "trendingMarketPricePercentages": {},
+      "buckets": [
+        {
+          "marketPrice": "54.5",
+          "quantitySold": "2",
+          "lowSalePrice": "52",
+          "lowSalePriceWithShipping": "53",
+          "highSalePrice": "56",
+          "highSalePriceWithShipping": "57",
+          "transactionCount": "2",
+          "bucketStartDate": "2026-04-14"
+        }
+      ]
+    },
+    {
+      "skuId": "8938022",
+      "variant": "Reverse Holofoil",
+      "language": "English",
+      "condition": "Near Mint",
+      "averageDailyQuantitySold": "0",
+      "averageDailyTransactionCount": "0",
+      "totalQuantitySold": "3",
+      "totalTransactionCount": "3",
+      "trendingMarketPricePercentages": {},
+      "buckets": []
+    }
+  ]
+}

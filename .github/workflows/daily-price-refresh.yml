@@ -1,0 +1,49 @@
+name: Daily price refresh
+
+# Runs every day at 09:00 UTC (~4am ET / 1am PT). That's a few hours after
+# TCGPlayer typically settles the previous day's sales into the detailed-
+# history endpoint, so we pull the freshest buckets on each run.
+#
+# Two scripts, both idempotent, both write straight to Supabase via the
+# service-role key:
+#   - seed:pool    — refreshes `cards` + `prices` from pokemontcg.io
+#   - seed:history — upserts new 3-day buckets into `price_buckets` from
+#                    TCGPlayer's public detailed-history JSON endpoint.
+#                    RECENT_BACKFILL_DAYS=1 in the script skips cards
+#                    already updated today, so reruns are cheap.
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: daily-price-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.2"
+
+      - run: bun install --frozen-lockfile
+
+      - name: Refresh cards + prices (seed:pool)
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          POKEMONTCG_API_KEY: ${{ secrets.POKEMONTCG_API_KEY }}
+        run: bun run seed:pool
+
+      - name: Append new price buckets (seed:history)
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          POKEMONTCG_API_KEY: ${{ secrets.POKEMONTCG_API_KEY }}
+        run: bun run seed:history --concurrency 4

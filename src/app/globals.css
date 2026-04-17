@@ -1,0 +1,320 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 15% 10%;
+    --foreground: 0 0% 98%;
+
+    --card: 220 15% 12%;
+    --card-foreground: 0 0% 98%;
+
+    --primary: 186 100% 50%;
+    --primary-foreground: 220 15% 10%;
+
+    --secondary: 220 15% 18%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 220 15% 16%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 320 100% 60%;
+    --accent-foreground: 220 15% 10%;
+
+    --border: 220 15% 20%;
+    --input: 220 15% 20%;
+    --ring: 186 100% 50%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+}
+
+/* Holographic foil — adapted from simeydotme/pokemon-cards-css (MIT).
+   Mounted only while hovering a card; HoloCard sets the pointer vars. */
+.holo-card {
+  --glitter: url("/holo/glitter.png");
+  --illusion: url("/holo/illusion.png");
+  --geometric: url("/holo/geometric.png");
+  --glittersize: 25%;
+  --foilsize: 33%;
+  --space: 5%;
+  --angle: 133deg;
+  --sunpillar-1: hsl(2, 100%, 73%);
+  --sunpillar-2: hsl(53, 100%, 69%);
+  --sunpillar-3: hsl(93, 100%, 69%);
+  --sunpillar-4: hsl(176, 100%, 76%);
+  --sunpillar-5: hsl(228, 100%, 74%);
+  --sunpillar-6: hsl(283, 100%, 73%);
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --pointer-from-left: 0.5;
+  --pointer-from-top: 0.5;
+  --pointer-from-center: 0;
+  --background-x: 50%;
+  --background-y: 50%;
+  --rotate-x: 0deg;
+  --rotate-y: 0deg;
+}
+
+.holo-card__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.holo-card--active .holo-card__inner {
+  transform: perspective(900px) rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
+  transition: transform 0.12s ease-out;
+}
+
+.holo-card__shine,
+.holo-card__glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ─── shine: subtle pearl sheen for non-foil rarities ────────────────── */
+.holo-card--shine .holo-card__shine {
+  background-image: linear-gradient(
+    115deg,
+    transparent 20%,
+    hsl(320 90% 70% / 0.22) 38%,
+    hsl(50 95% 75% / 0.28) 50%,
+    hsl(180 90% 70% / 0.22) 62%,
+    transparent 80%
+  );
+  background-size: 250% 250%;
+  background-position: calc((100% - var(--pointer-x)) * 1.2) calc((100% - var(--pointer-y)) * 1.2);
+  mix-blend-mode: soft-light;
+}
+
+.holo-card--shine .holo-card__glare {
+  background: radial-gradient(
+    circle at var(--pointer-x) var(--pointer-y),
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.06) 22%,
+    transparent 50%
+  );
+  mix-blend-mode: overlay;
+}
+
+/* ─── shiny: Shiny Vault silver foil (ported from shiny-rare.css) ────── */
+.holo-card--shiny .holo-card__shine {
+  background-image:
+    var(--illusion),
+    repeating-linear-gradient(0deg,
+      var(--sunpillar-1) calc(var(--space) * 1),
+      var(--sunpillar-2) calc(var(--space) * 2),
+      var(--sunpillar-3) calc(var(--space) * 3),
+      var(--sunpillar-4) calc(var(--space) * 4),
+      var(--sunpillar-5) calc(var(--space) * 5),
+      var(--sunpillar-6) calc(var(--space) * 6),
+      var(--sunpillar-1) calc(var(--space) * 7)
+    ),
+    repeating-linear-gradient(var(--angle),
+      #0e152e 0%, hsl(180, 10%, 60%) 3.8%,
+      hsl(180, 29%, 66%) 4.5%, hsl(180, 10%, 60%) 5.2%,
+      #0e152e 10%, #0e152e 12%
+    ),
+    radial-gradient(
+      farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsla(0, 0%, 0%, 0.1) 12%, hsla(0, 0%, 0%, 0.15) 20%,
+      hsla(0, 0%, 0%, 0.25) 120%
+    );
+  background-position:
+    center center,
+    0% var(--background-y),
+    calc(var(--background-x) + (var(--background-y) * 0.2)) var(--background-y),
+    var(--background-x) var(--background-y);
+  background-blend-mode: exclusion, hue, hard-light;
+  background-size: var(--foilsize), 200% 700%, 300% 100%, 200% 100%;
+  filter: brightness(calc((var(--pointer-from-center) * 0.3) + 0.4)) contrast(1.9) saturate(1.5);
+  mix-blend-mode: color-dodge;
+}
+
+.holo-card--shiny .holo-card__glare {
+  background: radial-gradient(
+    farthest-corner circle at var(--pointer-x) var(--pointer-y),
+    hsl(0, 0%, 100%) 0%, hsl(320, 5%, 15%) 150%
+  );
+  mix-blend-mode: multiply;
+  filter: brightness(1.2) contrast(1) saturate(0.7);
+  opacity: calc(var(--pointer-from-center) * 0.9);
+}
+
+/* ─── gold: Secret Rare gold (ported from secret-rare.css) ───────────── */
+.holo-card--gold .holo-card__shine {
+  --shift: 1px;
+
+  background-image:
+    var(--glitter),
+    var(--glitter),
+    conic-gradient(from 0deg at 50% 50%,
+      var(--sunpillar-4),
+      var(--sunpillar-5),
+      var(--sunpillar-6),
+      var(--sunpillar-1),
+      var(--sunpillar-4)
+    ),
+    radial-gradient(
+      farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsla(150, 0%, 0%, 0.98) 10%,
+      hsla(0, 0%, 95%, 0.15) 90%
+    );
+  background-size:
+    var(--glittersize) var(--glittersize),
+    var(--glittersize) var(--glittersize),
+    cover, cover;
+  background-position: 45% 45%, 55% 55%, center center, center center;
+  background-blend-mode: soft-light, hard-light, overlay;
+  mix-blend-mode: color-dodge;
+  filter: brightness(calc(0.4 + (var(--pointer-from-center) * 0.2))) contrast(1) saturate(2.7);
+}
+
+.holo-card--gold .holo-card__shine::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image:
+    var(--illusion),
+    linear-gradient(45deg, hsl(46, 95%, 50%), hsl(52, 100%, 69%)),
+    radial-gradient(
+      farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsla(10, 20%, 90%, 0.95) 10%, hsl(0, 0%, 0%) 70%
+    );
+  background-size: var(--foilsize), cover, cover;
+  background-position: center center, center center, center center;
+  background-blend-mode: hard-light, multiply;
+  mix-blend-mode: lighten;
+  filter: brightness(1.25) contrast(1.25) saturate(0.35);
+  opacity: 0.8;
+}
+
+.holo-card--gold .holo-card__shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--glitter);
+  background-size: var(--glittersize) var(--glittersize);
+  background-position:
+    calc(50% - ((var(--shift) * 2) * var(--pointer-from-left)) + var(--shift))
+    calc(50% - ((var(--shift) * 2) * var(--pointer-from-top)) + var(--shift));
+  filter: brightness(calc((var(--pointer-from-center) * 0.6) + 0.6)) contrast(1.5);
+  mix-blend-mode: overlay;
+}
+
+.holo-card--gold .holo-card__glare {
+  background: radial-gradient(
+    farthest-corner circle at var(--pointer-x) var(--pointer-y),
+    hsla(45, 8%, 80%, 0.3) 0%, hsl(22, 15%, 12%) 180%
+  );
+  filter: brightness(1.3) contrast(1.5);
+  mix-blend-mode: hard-light;
+}
+
+/* ─── rainbow: Shiny VMax rainbow (ported from shiny-vmax.css) ───────── */
+.holo-card--rainbow .holo-card__shine {
+  --r1: hsl(0, 57%, 37%);
+  --r2: hsl(40, 53%, 39%);
+  --r3: hsl(90, 60%, 35%);
+  --r4: hsl(180, 60%, 35%);
+  --r5: hsl(180, 60%, 35%);
+  --r6: hsl(210, 57%, 39%);
+  --r7: hsl(280, 55%, 31%);
+
+  background-image:
+    var(--glitter),
+    var(--glitter),
+    linear-gradient(-30deg,
+      var(--r1), var(--r2), var(--r3), var(--r4), var(--r5), var(--r6), var(--r7),
+      var(--r1), var(--r2), var(--r3), var(--r4), var(--r5), var(--r6), var(--r7),
+      var(--r1), var(--r2), var(--r3), var(--r4), var(--r5), var(--r6), var(--r7),
+      var(--r1)
+    ),
+    radial-gradient(
+      farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsla(248, 5%, 10%, 1) 10%,
+      hsla(206, 5%, 80%, 0.1) 50%,
+      hsla(0, 0%, 95%, 0.98) 90%
+    );
+  background-size:
+    var(--glittersize) var(--glittersize),
+    var(--glittersize) var(--glittersize),
+    400% 400%, cover;
+  background-position:
+    40% 45%, 55% 55%,
+    calc(var(--background-x) * 1.5) calc(var(--background-y) * 1.5),
+    center center;
+  background-blend-mode: soft-light, overlay, color-burn;
+  mix-blend-mode: color-dodge;
+  filter: brightness(calc((var(--pointer-from-center) * 0.3) + 0.7)) contrast(1.4) saturate(1.1);
+}
+
+.holo-card--rainbow .holo-card__shine::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image:
+    var(--illusion),
+    radial-gradient(
+      farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsla(248, 5%, 91%, 0.95) 10%,
+      hsla(206, 5%, 68%, 0.5) 50%,
+      hsl(0, 0%, 0%) 120%
+    );
+  background-size: var(--foilsize), cover;
+  background-position: center, center;
+  background-blend-mode: color-burn;
+  mix-blend-mode: lighten;
+  filter: brightness(1) contrast(1) saturate(0.4);
+  opacity: 0.5;
+}
+
+.holo-card--rainbow .holo-card__shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: repeating-linear-gradient(-30deg,
+    var(--sunpillar-1) calc(var(--space) * 1),
+    var(--sunpillar-2) calc(var(--space) * 2),
+    var(--sunpillar-3) calc(var(--space) * 3),
+    var(--sunpillar-4) calc(var(--space) * 4),
+    var(--sunpillar-5) calc(var(--space) * 5),
+    var(--sunpillar-6) calc(var(--space) * 6),
+    var(--sunpillar-1) calc(var(--space) * 7)
+  );
+  background-size: 400% 800%;
+  background-position:
+    calc(50% + (50% - var(--background-x)) * 3)
+    calc(50% + (50% - var(--background-y)) * 3);
+  filter: brightness(calc(0.75 - (var(--pointer-from-center) * 0.5))) contrast(1) saturate(1);
+  mix-blend-mode: hue;
+}
+
+.holo-card--rainbow .holo-card__glare {
+  background: radial-gradient(
+    farthest-corner circle at var(--pointer-x) var(--pointer-y),
+    hsla(248, 5%, 90%, 0.45) 0%,
+    hsla(206, 5%, 30%, 0.45) 45%,
+    hsla(0, 0%, 0%, 0.33) 120%
+  );
+  filter: brightness(1) contrast(1.25);
+  mix-blend-mode: overlay;
+}
